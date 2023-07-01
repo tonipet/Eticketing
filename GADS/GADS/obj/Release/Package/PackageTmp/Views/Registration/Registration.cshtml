@@ -1,0 +1,306 @@
+﻿@model GADS.Models.Registration
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Registration</title>
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin.css" rel="stylesheet">
+    <script src="~/js/jquery-1.12.4.js"></script>
+    <script src="~/js/select2.full.js"></script>
+    <script src="~/js/select2.full.min.js"></script>
+    <script src="~/js/select2.js"></script>
+    <script src="~/js/select2.min.js"></script>
+    <link href="~/css/select2.css" rel="stylesheet" />
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/js/validate.js"></script>
+    @*<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.js"></script>*@
+    <script type="text/javascript">
+        var error = "";
+        var _valid = false;
+        $(function () {
+            $("#commentForm").validate();
+            $("select").select2();
+            $('#Alerterror').hide();
+            $('#Alertsuccess').hide();
+            getDivision();
+            getPosition();
+        });
+        function getDivision() {
+            $.ajax({
+                type: "POST",
+                url: "/Registration/getDivision",
+                data: '{}',
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var DivisionnList = $("[id*=Division]");
+                    DivisionnList.empty().append('<option selected="selected" value=""></option>');
+                    $.each(result, function () {
+                        DivisionnList.append($("<option></option>").val(this['Value']).html(this['Text']));
+                    });
+                }
+            });
+        }
+
+        function getPosition() {
+            $.ajax({
+                type: "POST",
+                url: "/Registration/getPosition",
+                data: '{}',
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+
+                    var PositionList = $("[id*=Position]");
+                    PositionList.empty().append('<option selected="selected" value=""></option>');
+                    $.each(result, function () {
+                        PositionList.append($("<option></option>").val(this['Value']).html(this['Text']));
+                    });
+                }
+            });
+        }
+
+
+        function getdepartment() {
+            var empObj = {
+                DivisionCode: $('#Division').val()
+            };
+            $.ajax({
+                url: "/Registration/getDeparment",
+                data: JSON.stringify(empObj),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var DepartmentList = $("[id*=Department]");
+                    DepartmentList.empty().append('<option selected="selected" value=""></option>');
+                    $.each(result, function () {
+                        DepartmentList.append($("<option></option>").val(this['Value']).html(this['Text']));
+                    });
+
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+           
+        }
+
+
+        function validate() {
+            _valid = false;
+            var inputEmailLabel = $('#inputEmail-error');
+
+
+            if ($('#inputPassword').val() != $('#confirmPassword').val()) {
+                _valid = true;
+                error += "Invalid Password Not match <br/>";
+            }
+            if (!$('#Division').val()) {
+                _valid = true;
+                error += "Invalid Division<br/>";
+            }
+            if (!$('#Department').val()) {
+                _valid = true;
+                error += "Invalid Department <br/>";
+            }
+            if (!$('#Position').val()) {
+                _valid = true;
+                error += "Invalid Position <br/>";
+            }
+            if (inputEmailLabel.text() == 'Please enter a valid email address.') {
+                _valid = true;
+                error += "Invalid Email Address <br/>";
+            }
+
+
+            return _valid;
+        }
+        function clear() {
+            $('#lastName').val('');
+            $('#firstName').val('');
+            $('#Division').html('');
+            $('#Department').html('');
+            $('#Position').html('');;
+            $('#inputEmail').val('');
+            $('#inputPassword').val('');
+            $('#confirmPassword').val('');
+        }
+
+        $(document).on('click', '#register', function () {
+            AddUser();
+        });
+
+        function AddUser() {
+
+            var res = validate();
+            if (res == true) {
+
+                $('#RegistrationModal').modal('hide');
+                $('#Alerterror').show();
+                $('#Alerterror').html(error);
+                error = "";
+
+
+            } else {
+                $('#Alerterror').hide();
+                $('#Alertsuccess').hide();
+                var empObj = {
+                    LastName: $('#lastName').val(),
+                    FirstName: $('#firstName').val(),
+                    DivisionCode: $('#Division').val(),
+                    DepartmentCode: $('#Department').val(),
+                    Position: $('#Position').val(),
+                    Email: $('#inputEmail').val(),
+                    Password: $('#inputPassword').val()
+                };
+                $.ajax({
+                    url: "/Registration/AddUser",
+                    data: JSON.stringify(empObj),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result == true) {
+                            $('#Alerterror').show();
+                            $('#Alerterror').html('Email Already Exist! <br/> Please Use Another Email Address');
+                        } else {
+                            $('#Alertsuccess').show();
+                            $('#RegistrationModal').modal('hide');
+                            $('#Alertsuccess').text('SuccessFully Register');
+                            clear();
+                        }
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark">
+    <div class="container">
+        <div class="card card-register mx-auto mt-5">
+            <div class="card-header">Register an Account</div>
+            <div class="card-body">
+                <form class="cmxform" id="commentForm">
+                    <div class="form-group">
+                        <div class="form-row">
+
+
+                            <div class="col-md-6">
+                                <label>First name</label>
+                                <div class="form-label-group">
+                                    <input type="text" id="firstName" class="form-control" required="required" autofocus="autofocus">
+                                    <label for="firstName"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Last name</label>
+                                <div class="form-label-group">
+                                    <label for="lastName"></label>
+                                    <input type="text" id="lastName" class="form-control" required="required">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="form-label-group">
+                            <label for="inputEmail" id="inputEmailLabel"></label>
+                            <input type="email" id="inputEmail" class="form-control" required="required" placeholder="Email">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label>Password</label>
+                                <div class="form-label-group">
+                                    <input type="password" id="inputPassword" class="form-control" required="required">
+                                    <label for="inputPassword"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Re-Password</label>
+                                <div class="form-label-group">
+                                    <input type="password" id="confirmPassword" class="form-control" required="required">
+                                    <label for="confirmPassword"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label>Division</label>
+                                <select id="Division" onchange="getdepartment()" required>
+                                    <option value="" disabled>Select your Division</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Department</label>
+                                <select id="Department" required>
+                                    <option value="" disabled>Select One Department</option>
+                                    @*<option value="1">IT</option>*@
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label>Position</label>
+                                <select id="Position" required>
+                                    <option value="" disabled>Select One Position</option>
+                                    @*<option value="1">Programmer</option>*@
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <input id="register" type="button" value="Register" class="btn btn-primary btn-block">
+
+                </form>
+                <div class="text-center">
+                    <a class="d-block small mt-3" href="~/Login/Login/">Login Page</a>
+
+                </div>
+            </div>
+            <div class="alert alert-success" id="Alertsuccess">
+
+            </div>
+            <div class="alert alert-danger" id="Alerterror">
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+</html>

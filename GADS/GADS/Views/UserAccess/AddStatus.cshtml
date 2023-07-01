@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "AddStatus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script src="~/Modified Js/UserStatus.js"></script>
+
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <button type="button" class="btn btn-info" id="AddStatus"> Add Status</button>
+    </li>
+</ol>
+
+
+<div class="box">
+    <div class="box-body table-responsive no-padding">
+        <div class="box-body">
+
+            <table id="TBLStatus" class="table table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>User Group</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                   
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+
+                        <th>User Group</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                      
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="ModAddStatus">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header btn-info">
+                <h5 class="modal-title">User Access List</h5>
+
+            </div>
+            <div class="box-body">
+               <input type="text" id="UACode" style="width: 100%;" hidden/>
+                <label>User Access:</label>
+                <span class="error" id="UAccessErr">*</span>
+                <select class="form-control select2" id="UAccess" style="width: 100%;"></select>
+                <label>Status Access:</label>
+                <span class="error" id="UAStatussErr">*</span>
+                <select class="select2-container-multi form-control select2" multiple="multiple" id="UAStatus" data-placeholder="Select Status"
+                        style="width: 100%;">
+                   
+                </select>
+            </div>
+            <div class="modal-footer">
+                <input id="UAUpdate" type="button" value="Update" class="btn btn-primary btn-flat"  data-dismiss="modal">
+                <input id="UASave" type="button" value="Save" class="btn btn-primary btn-flat">
+                <button type="button" id="UAClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

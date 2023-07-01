@@ -1,0 +1,367 @@
+﻿@model GADS.Models.HomePage
+
+@{
+    ViewBag.Title = "CreateTicket";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .test{
+    border: 1px solid #ccc;
+    width: 250px;
+    height: 210px;
+    padding: 10px;
+    overflow-y:scroll;
+
+}
+</style>
+
+<script src="~/Modified Js/CommonJS.js"></script>
+<script src="~/Modified Js/CreateTicketJS.js"></script>
+
+<div class="modal fade" id="CreateTicketModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header  alert-info">
+                <h5 class="modal-title">Create New Ticket</h5>
+            </div>
+
+            <div class="modal-body">
+
+                <div role="tabpanel">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#Details" aria-controls="DetailsTab" role="tab" data-toggle="tab">Details</a>
+
+                        </li>
+                        <li role="presentation">
+                            <a href="#AttachmentTab" aria-controls="AttachmentTab" role="tab" data-toggle="tab">Attachment</a>
+
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+
+                    <input type="text" id="HiddenticketNo" hidden />
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="Details">
+                            <div class="col-md-12">
+                                <label>Title:</label>
+                                <span class="error" id="TitleErr">*</span>
+                                <input type="text" class="form-control" data-placeholder="Title" id="title" />
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>Department:</label>
+                                <span class="error" id="DepartmentErr">*</span>
+                                <select class="form-control select" data-placeholder="Select department" name="Department" id="Department" required style="width: 100%;">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label>TicketType:</label>
+                                <span class="error" id="StickerTypeErr">*</span>
+                                <select class="form-control select2" data-placeholder="Select Ticket Type" onchange="getSubTicketType()" id="Stickertype" style="width: 100%;">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>SubTicketType:</label>
+                                <span class="error" id="SubTicketTypeErr">*</span>
+                                <select class="form-control select2" data-placeholder="Select Sub Ticket Type" id="SubStickertype" style="width: 100%;">
+                                    <option value=""></option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-12">
+
+                                <label>Brief Description:</label>
+                                <span class="error" id="BriefDescriptionErr">*</span>
+                                <textarea class="form-control rounded-0" id="BriefDescription" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="AttachmentTab">
+                            <div class="col-md-12">
+
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="/HomePage/DownloadFile?fileName=Software Requirement Specification (SRS).doc">Software Requirement Specification (SRS) Format</a>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="form-group">
+                                <label>Specification Attachment</label>
+                                <input type="file" id="fileInput" name="file" onchange='getFilename(this)' multiple class="form-control-file" />
+                            </div>
+
+
+                            @*<ul class="contacts-list">
+                                <li id="attachmentLI">
+                                </li>
+                                <li>
+                                </li>
+                            </ul>*@
+                            @*<input type='file' onchange='getFilename(this)'/>*@
+                            <div class="box">
+                                <div class="box-body table-responsive no-padding">
+                                    <div class="box-body">
+                                     
+                                        <table id="tblDialogAttachment" class="table table-hover" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Attachment</th>
+                                                
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                                <tr>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+            </div>
+            <div class="modal-footer">
+
+
+                <br />
+
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <input id="save" type="button" value="Save" class="btn btn-primary">
+                <input id="update" type="button" value="Update" class="btn btn-primary">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        @*<a class="btn btn-primary" href="#" id="CreateTicket">CREATE TICKET</a>*@
+        <button type="button" class="btn btn-info" id="CreateTicket" >CREATE TICKET</button>
+      
+</li>
+</ol>
+
+
+<div class="box">
+    <div class="box-body table-responsive no-padding">
+        <div class="box-body">
+            <a class="" href="#" id="AdvanceSearch">Advance Search</a>
+            <a class="" href="#" id="CloseAdvanceSearch">Close Advance Search</a>
+            <table id="TBLCreated" class="table table-hover" style="width:100%">
+
+
+                <thead>
+                    <tr>
+                    
+                        <th>Ticket # </th>
+                        <th>Created Date</th>
+                        <th>Department</th>
+                        <th>Title</th>
+                        <th>Ticket Type</th>
+                        <th>Sub Ticket Type</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Target Completion Date</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="DialogTicketModal" role="dialog" aria-labelledby="#moderror" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header  btn-info">
+                <p id="Dialoginformation"></p>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-4">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+
+                        </div>
+                        <div class="box-body">
+                            <input type="text" id="DialogConvoID" hidden />
+                            <input type="text" id="DialogTicketNo" hidden />
+                            <label>Status:</label>
+                            <span class="error" id="StatusDialogErr">*</span>
+                            <select class="form-control select2" id="DialogStatus" style="width: 100%;"></select>
+                            <label>Assign to:</label>
+                            @*<span class="error" id="AssignToDialogErr">*</span>*@
+                            <select class="form-control select2" id="DialogAssignto" style="width: 100%;"></select>
+                            <label>Tags:</label>
+                            <select class="select2-container-multi form-control select2" multiple="multiple" id="DialogTags" data-placeholder="Select a Tag"
+                                    style="width: 100%;"></select>
+                                <label>TicketType:</label>
+                                <span class="error" id="DialogStickerTypeErr">*</span>
+                                <select class="form-control select2" data-placeholder="Select Ticket Type" onchange="DialoggetSubTicketType()" id="DialogStickertype" style="width: 100%;">
+                                    <option value=""></option>
+                                </select>
+                     
+                                <label>SubTicketType:</label>
+                                <span class="error" id="DialogSubTicketTypeErr">*</span>
+                                <select class="form-control select2" data-placeholder="Select Sub Ticket Type" id="DialogSubStickertype" style="width: 100%;">
+                                    <option value=""></option>
+                                </select>
+
+                         
+                            <label>Target Completion Date:</label>
+                            <span class="error" id="TargetDateDialogErr">*</span>
+                            <input type="text" class="form-control" id="datepicker">
+
+
+
+
+
+
+                            </div>
+                        
+                    </div>
+                    
+                </div>
+
+
+
+
+                <div class="col-md-8">
+                    <div class="box box-primary direct-chat direct-chat-primary" id="messageBody">
+                      
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Dialog</h3>
+
+
+                            <div class="box-tools pull-right">
+                               
+
+
+                            </div>
+                        </div>
+
+                        <div class="box-body">
+                            <div class="direct-chat-msg">
+                                <div class="direct-chat-info clearfix">
+                                    <span class="direct-chat-name pull-left">Description</span>
+                                </div>
+                             
+                                <div class="direct-chat-text">
+                                   <p id='DialogDescription'></p>
+                                </div>
+                            </div>
+                          
+                            <div class="direct-chat-messages" id="DialogmessageID">
+
+
+
+                            </div>
+
+                            <div class="direct-chat-contacts" id="DialogAttachmentList">
+
+                            </div>
+
+                        </div>
+                                <textarea class="form-control" id="dialogMsg" placeholder="Input Message............."></textarea>
+                    </div>
+
+                </div>
+                <div>
+                  
+                    <div class="modal-footer">
+                        <div class="col-md-12">
+                         
+                            <button type="button" class="btn btn-primary btn-sm a-btn-slide-text" data-toggle="tooltip" id="btnattachmentlist" title="List of Attachment">  <span class="fa fa-list" aria-hidden="true"></span></button>
+                            <button type="button" class="btn btn-primary btn-sm a-btn-slide-text"  id="AddAttachment" data-toggle="tooltip"  title="Add Attachment" >  <span class="fa fa-paperclip" aria-hidden="true"></span></button>
+                          
+                            <input id="UpdateDialogSave" type="button" value="Update" class="btn btn-primary btn-flat">
+                            <input id="saveDialogSave" type="button" value="Save" class="btn btn-primary btn-flat">
+                            <input id="TEST234" type="button" value="TEST" class="btn btn-primary btn-flat">
+                            <button type="button" id="btnCloseModSuccess" class="btn btn-success" data-dismiss="modal">Close</button>
+                            </div>
+                        
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="DialogAttachmentModal" tabindex="-2" role="dialog" aria-labelledby="#moderror" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content sm">
+            <div class="modal-header  alert-info">
+                <h5 class="modal-title">Attachment</h5>
+            </div>
+            <div class="modal-body">
+                <div class="box">
+                    <div class="box-body table-responsive no-padding">
+                        <div class="box-body">
+                            <input type="file" class="" id="dialogattachment"  multiple onchange='getAttachement(this)' >
+                            <table id="tblAttachment" class="table table-hover" style="width:100%" multiple>
+                                <thead>
+                                    <tr>
+                                        <th>Attachment</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr></tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+          
+
+                        <div class="modal-footer">
+                          
+
+                            <button type="button" id="BtnAttachmentSave" class="btn btn-success" data-dismiss="modal">Save</button>
+                            <button type="button" id="btnCloseModSuccess" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+

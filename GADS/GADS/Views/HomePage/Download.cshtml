@@ -1,0 +1,25 @@
+﻿@model GADS.Models.HomePage
+
+@{
+    ViewBag.Title = "Download Files";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //var Files = (ViewBag.Files as string[]);
+    var Files = (ViewBag.Files as string);
+    @Html.ActionLink(Files, "DownloadFile", new { fileName = Files })
+    //if (Files != null && Files.Any())
+    @*{
+        foreach (var file in Files)
+        {
+            <br />
+            @Html.ActionLink(file, "DownloadFile", new { fileName = file })
+            <br />
+        }
+    }
+    else
+    {
+        <label>No File(s) to Download</label>
+    }*@
+}
+
+

@@ -1,0 +1,118 @@
+﻿@model GADS.Models.UserVerification
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Verify User</title>
+
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <link href="/css/sb-admin.css" rel="stylesheet">
+    <script src="~/js/jquery-1.12.4.js"></script>
+    @*<script src="/vendor/jquery/jquery.min.js"></script>*@
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script type="text/javascript">
+
+        function getUrlVars() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        $(function () {
+        
+            var answerid = $(this).attr('id');
+            $('#AlertLogIn').hide();
+           
+            //$('#Alertsuccess').hide();
+
+        });
+        $(document).on('click', '#Verify', function () {
+            getDivision();
+          
+        });
+
+
+
+        function getDivision() {
+            var email = getUrlVars()["id"];
+            var empObj = {
+                verifyEmail: email
+            };
+
+         
+            $.ajax({
+                type: "POST",
+                url: "/UserVerification/VerifyAccount",
+                data: JSON.stringify(empObj),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == true) {
+                        $('#AlertVerify').hide();
+                        $('#AlertLogIn').show();
+                    }
+                }
+            });
+        }
+
+    </script>
+</head>
+<body class="bg-dark">
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Verify User</div>
+            <div class="card-body">
+                <form>
+                    @*<div class="form-group">
+                        <div class="form-label-group">
+                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required" autofocus="autofocus">
+                            <label for="inputEmail">Email address</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
+                            <label for="inputPassword">Password</label>
+                        </div>
+                    </div>
+                    <input id="Login" type="button" value="Login" class="btn btn-primary btn-block">*@
+                    @*<a class="btn btn-primary btn-block" href="index.html">Login</a>*@
+                </form>
+                
+                <div class="alert alert-success" id="AlertVerify">
+                    <h5>Your Account is not yet verified <br /> click <a href="#" id="Verify">here</a> </h5>
+                </div>
+
+                <div class="alert alert-success" id="AlertLogIn">
+                    <h5>Your Account is successfully verified <br /> click <a href="~/Login/Login/" id="Login">here</a> to login </h5>
+                </div>
+                @*<div class="alert alert-danger" id="Alerterror">
+                </div>*@
+            </div>
+        </div>
+
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <!-- Core plugin JavaScript-->
+
+</body>
+</html>

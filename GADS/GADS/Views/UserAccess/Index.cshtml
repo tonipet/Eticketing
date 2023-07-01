@@ -1,0 +1,146 @@
+﻿@model GADS.Models.UserAccess
+
+@{
+    ViewBag.Title = "Add User Access";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Modified Js/UserAccess.js"></script>
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <button type="button" class="btn btn-info" id="AddUserAccess">Add User Access</button>
+    </li>
+</ol>
+
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Users</h3>
+    </div>
+
+    <div class="box">
+        <div class="box-body table-responsive no-padding">
+            <div class="box-body">
+
+                <table id="TBLCreated" class="table table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+
+                            <th>FirstName</th>
+                            <th>LastName</th>
+                            <th>Division</th>
+                            <th>Deparment</th>
+                            <th>Position</th>
+                            <th>Email</th>
+                            <th>Access</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>FirstName</th>
+                            <th>LastName</th>
+                            <th>Division</th>
+                            <th>Deparment</th>
+                            <th>Position</th>
+                            <th>Email</th>
+                            <th>Access</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" role="dialog" id="ModEditUsers">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header  btn-info">
+                <h5 class="modal-title">Edit User</h5>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <input type="text" id="Uusercode" hidden />
+                    <label>FirstName:</label>
+                    <span class="error" id="UFNameErr">*</span>
+                    <input type="text" id="UFName" class="form-control" />
+                    <label>LastName:</label>
+                    <span class="error" id="ULNameErr">*</span>
+                    <input type="text" id="ULName" class="form-control" />
+                    <label>Division:</label>
+                    <span class="error" id="UDivisionErr">*</span>
+                    <select class="form-control select2" id="UDivision" onchange="getdepartment($('#UDivision').val())" style="width: 100%;"></select>
+                    <label>Department:</label>
+                    <span class="error" id="UDeptErr">*</span>
+                    <select class="form-control select2" id="UDept" style="width: 100%;"></select>
+                    <label>Position:</label>
+                    <span class="error" id="UPositionErr">*</span>
+                    <select class="form-control select2" id="UPosition" style="width: 100%;"></select>
+                    <label>Email:</label>
+                    <span class="error" id="UEmailErr">*</span>
+                    <input type="text" id="UEmail" class="form-control" />
+
+                    <label>Access:</label>
+                    <span class="error" id="UAccessErr">*</span>
+                    <select class="form-control select2" id="UAccess" style="width: 100%;"></select>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" id="btnEditUser" class="btn btn-primary"data-dismiss="modal">Save</button>
+                <button type="button" id="btnCloseUser" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" role="dialog" id="ModUserAccess">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header  btn-info">
+                <h5 class="modal-title">Edit User</h5>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <input type="text" id="Uusercode" hidden />
+                    <label>FirstName:</label>
+                    <span class="error" id="UFNameErr">*</span>
+                    <input type="text" id="UFName" class="form-control" />
+                    <label>LastName:</label>
+                    <span class="error" id="ULNameErr">*</span>
+                    <input type="text" id="ULName" class="form-control" />
+                    <label>Division:</label>
+                    <span class="error" id="UDivisionErr">*</span>
+                    <select class="form-control select2" id="UDivision" onchange="getdepartment($('#UDivision').val())" style="width: 100%;"></select>
+                    <label>Department:</label>
+                    <span class="error" id="UDeptErr">*</span>
+                    <select class="form-control select2" id="UDept" style="width: 100%;"></select>
+                    <label>Position:</label>
+                    <span class="error" id="UPositionErr">*</span>
+                    <select class="form-control select2" id="UPosition" style="width: 100%;"></select>
+                    <label>Email:</label>
+                    <span class="error" id="UEmailErr">*</span>
+                    <input type="text" id="UEmail" class="form-control" />
+
+                    <label>Access:</label>
+                    <span class="error" id="UAccessErr">*</span>
+                    <select class="form-control select2" id="UAccess" style="width: 100%;"></select>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" id="btnEditUser" class="btn btn-primary">Save</button>
+                <button type="button" id="btnCloseUser" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
